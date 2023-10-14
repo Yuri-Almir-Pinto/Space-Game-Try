@@ -1,0 +1,4 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/zphyr/source/repos/Game Try/Game Try/Content/Background/Space.jpg","C:/Users/zphyr/source/repos/Game Try/Game Try/Content/bin/DesktopGL/Background/Space.xnb","TextureProcessor","Texture2DContent",17899,740245,0,2078078
+"C:/Users/zphyr/source/repos/Game Try/Game Try/Content/Character/Spaceship.png","C:/Users/zphyr/source/repos/Game Try/Game Try/Content/bin/DesktopGL/Character/Spaceship.xnb","TextureProcessor","Texture2DContent",1832,826085,0,0298248
+"C:/Users/zphyr/source/repos/Game Try/Game Try/Content/Enemies/Alien.png","C:/Users/zphyr/source/repos/Game Try/Game Try/Content/bin/DesktopGL/Enemies/Alien.xnb","TextureProcessor","Texture2DContent",23617,4194389,0,1163363
