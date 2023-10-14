@@ -1,4 +1,5 @@
-﻿using Game_Try.Movement;
+﻿using Game_Try.Character;
+using Game_Try.Utils.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -8,9 +9,10 @@ namespace Game_Try.Main
     public class SpaceInvadersGame : Game
     {
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        public static SpriteBatch _spriteBatch;
         private Texture2D alien;
-        private Texture2D spaceship;
+        private static Spaceship spaceship = new Spaceship(new Vector2(100, 100), 0.1f, 8);
+        private Texture2D spaceshipSprite;
         private Texture2D background;
 
         public SpaceInvadersGame()
@@ -23,7 +25,6 @@ namespace Game_Try.Main
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
@@ -31,8 +32,13 @@ namespace Game_Try.Main
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             alien = Content.Load<Texture2D>("Enemies/Alien");
-            spaceship = Content.Load<Texture2D>("Character/Spaceship");
+            spaceshipSprite = spaceship.load(Content);
             background = Content.Load<Texture2D>("Background/Space");
+        }
+
+        protected override void UnloadContent()
+        {
+            base.UnloadContent();
         }
 
         protected override void Update(GameTime gameTime)
@@ -41,6 +47,8 @@ namespace Game_Try.Main
             {
                 Exit();
             }
+
+            spaceship.move(Keyboard.GetState());
 
 
             // TODO: Add your update logic here
@@ -53,15 +61,8 @@ namespace Game_Try.Main
             GraphicsDevice.Clear(Color.CornflowerBlue);
             _spriteBatch.Begin();
             _spriteBatch.Draw(background, new Rectangle(0, 0, 800, 480), Color.White);
-            _spriteBatch.Draw(spaceship,
-                                new Rectangle(100, 100, 50, 50),
-                                null,
-                                Color.White,
-                                0f,
-                                new Vector2(spaceship.Width / 2, spaceship.Height / 2),
-                                SpriteEffects.FlipVertically,
-                                1f);
             _spriteBatch.Draw(alien, new Rectangle(200, 100, 50, 50), Color.White);
+            spaceship.draw(_spriteBatch, spaceshipSprite);
             _spriteBatch.End();
             // TODO: Add your drawing code here
 
