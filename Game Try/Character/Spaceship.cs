@@ -25,14 +25,13 @@ namespace Game_Try.Character
             set { this.MoveSpeed = value; }
         }
 
-        public Spaceship(Vector2 position, float scale, float moveSpeed) : base(position, scale)
+        public Spaceship (Vector2 position, float scale, float moveSpeed) : base (position, scale)
         {
             this.MoveSpeed= moveSpeed;
         }
 
         public void move(KeyboardState direction)
         {
-
             if (direction.IsKeyDown((Keys) EMoveTypes.UP))
             {
                 Position.Y -= MoveSpeed;
@@ -53,6 +52,8 @@ namespace Game_Try.Character
                 Position.X += MoveSpeed;
             }
         }
+
+        public void move(EMoveTypes direction) { }
 
         public Texture2D load(ContentManager content)
         {

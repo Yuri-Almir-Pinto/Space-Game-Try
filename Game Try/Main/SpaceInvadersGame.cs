@@ -1,4 +1,5 @@
 ﻿using Game_Try.Character;
+using Game_Try.Character.Enemies;
 using Game_Try.Utils.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,9 +11,10 @@ namespace Game_Try.Main
     {
         private GraphicsDeviceManager _graphics;
         public static SpriteBatch _spriteBatch;
-        private Texture2D alien;
         private static Spaceship spaceship = new Spaceship(new Vector2(100, 100), 0.1f, 8);
         private Texture2D spaceshipSprite;
+        private static Alien alien = new Alien(new Vector2(100, 200), 0.05f, 2);
+        private Texture2D alienSprite;
         private Texture2D background;
 
         public SpaceInvadersGame()
@@ -31,7 +33,7 @@ namespace Game_Try.Main
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            alien = Content.Load<Texture2D>("Enemies/Alien");
+            alienSprite = alien.load(Content);
             spaceshipSprite = spaceship.load(Content);
             background = Content.Load<Texture2D>("Background/Space");
         }
@@ -49,6 +51,7 @@ namespace Game_Try.Main
             }
 
             spaceship.move(Keyboard.GetState());
+            alien.move(EMoveTypes.UP);
 
 
             // TODO: Add your update logic here
@@ -61,7 +64,7 @@ namespace Game_Try.Main
             GraphicsDevice.Clear(Color.CornflowerBlue);
             _spriteBatch.Begin();
             _spriteBatch.Draw(background, new Rectangle(0, 0, 800, 480), Color.White);
-            _spriteBatch.Draw(alien, new Rectangle(200, 100, 50, 50), Color.White);
+            alien.draw(_spriteBatch, alienSprite);
             spaceship.draw(_spriteBatch, spaceshipSprite);
             _spriteBatch.End();
             // TODO: Add your drawing code here

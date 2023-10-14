@@ -11,8 +11,10 @@ namespace Game_Try.Character.Abilities
 {
     public interface IMoveable
     {
-        public float moveSpeed { get; set; }
+        protected float moveSpeed { get; set; }
 
         public void move(KeyboardState keyBoardState);
+
+        public void move(EMoveTypes direction);
     }
 }
