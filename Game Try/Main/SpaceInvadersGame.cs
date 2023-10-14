@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Game_Try.Movement;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Game_Try
+namespace Game_Try.Main
 {
-    public class Game1 : Game
+    public class SpaceInvadersGame : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -12,7 +13,7 @@ namespace Game_Try
         private Texture2D spaceship;
         private Texture2D background;
 
-        public Game1()
+        public SpaceInvadersGame()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -40,7 +41,7 @@ namespace Game_Try
             {
                 Exit();
             }
-                
+
 
             // TODO: Add your update logic here
 
@@ -57,7 +58,7 @@ namespace Game_Try
                                 null,
                                 Color.White,
                                 0f,
-                                new Vector2(spaceship.Width/2, spaceship.Height/2),
+                                new Vector2(spaceship.Width / 2, spaceship.Height / 2),
                                 SpriteEffects.FlipVertically,
                                 1f);
             _spriteBatch.Draw(alien, new Rectangle(200, 100, 50, 50), Color.White);
