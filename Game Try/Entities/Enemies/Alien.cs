@@ -1,4 +1,4 @@
-﻿using Game_Try.Character.Abilities;
+﻿using Game_Try.Entities.Abilities;
 using Game_Try.Utils.Input;
 using Game_Try.Utils.Spriting;
 using Microsoft.Xna.Framework;
@@ -11,13 +11,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Game_Try.Character.Enemies
+namespace Game_Try.Entities.Enemies
 {
     public class Alien : Sprite, IMoveable
     {
-        public float MoveSpeed;
+        private float MoveSpeed;
 
-        float IMoveable.moveSpeed
+        public float moveSpeed
         {
             get { return this.MoveSpeed; }
             set { this.MoveSpeed = value; }
@@ -28,13 +28,9 @@ namespace Game_Try.Character.Enemies
             this.MoveSpeed = moveSpeed;
         }
 
-        void IMoveable.move(KeyboardState keyBoardState)
+        public void move(KeyboardState direction, float moveSpeedModifier = 1)
         {
-            throw new NotImplementedException();
-        }
-
-        public void move(EMoveTypes direction)
-        {
+            
             this.Position.X += this.MoveSpeed;
         }
 

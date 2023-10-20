@@ -1,9 +1,12 @@
-﻿using Game_Try.Character;
-using Game_Try.Character.Enemies;
+﻿using Game_Try.Entities;
+using Game_Try.Entities.Enemies;
+using Game_Try.Utils.Events;
 using Game_Try.Utils.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 
 namespace Game_Try.Main
 {
@@ -26,7 +29,7 @@ namespace Game_Try.Main
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            Spaceship.registerPlayerInputEvents(spaceship);
             base.Initialize();
         }
 
@@ -34,25 +37,23 @@ namespace Game_Try.Main
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             alienSprite = alien.load(Content);
-            spaceshipSprite = spaceship.load(Content);
+            spaceshipSprite = spaceship.loadSpaceship(Content);
             background = Content.Load<Texture2D>("Background/Space");
-        }
-
-        protected override void UnloadContent()
-        {
-            base.UnloadContent();
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (KeyboardHelper.checkInput() != EEventType.NO_INPUT)
             {
-                Exit();
+                Spaceship.handlePlayerInput(this);
             }
+            GameEventHandler.callEvents(new GameEventArgs(this)
+            {
+                eventType = new List<EEventType> { EEventType.MOVEMENT_INPUT },
+                keyboardState = new KeyboardState(new Keys[] { Keys.S }),
+                moveSpeedModifier = 0.5f
 
-            spaceship.move(Keyboard.GetState());
-            alien.move(EMoveTypes.UP);
-
+            });
 
             // TODO: Add your update logic here
 
@@ -70,6 +71,11 @@ namespace Game_Try.Main
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+        }
+
+        public void ExitGame()
+        {
+            Exit();
         }
     }
 }

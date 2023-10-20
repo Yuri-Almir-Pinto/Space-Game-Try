@@ -1,6 +1,4 @@
-﻿using Game_Try.Character;
-using Game_Try.Main;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,15 +11,16 @@ namespace Game_Try.Utils.Spriting
 {
     public class Sprite
     {
+
         protected Vector2 Position;
 
-        public Vector2 position
-        {
-            get { return this.Position; }
-            set { this.Position = value; }
-        }
-
         protected float Scale;
+
+        public Vector2 position 
+        {   
+            get { return this.Position; } 
+            set {  this.Position = value; }
+        }
 
         public float scale
         {

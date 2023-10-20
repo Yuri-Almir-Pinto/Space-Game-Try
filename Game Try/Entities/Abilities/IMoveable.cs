@@ -7,14 +7,16 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Game_Try.Utils.Input;
 
-namespace Game_Try.Character.Abilities
+namespace Game_Try.Entities.Abilities
 {
     public interface IMoveable
     {
         protected float moveSpeed { get; set; }
 
-        public void move(KeyboardState keyBoardState);
+        public Vector2 position { get; set; }
 
-        public void move(EMoveTypes direction);
+        public float scale { get; set; }
+
+        public void move(KeyboardState Direction, float moveSpeedModifier);
     }
 }
