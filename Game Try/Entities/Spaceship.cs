@@ -59,6 +59,7 @@ namespace Game_Try.Entities
 
         public static void handlePlayerInput(SpaceInvadersGame game)
         {
+        // TODO: Atualizar para adicionar todos os EEventType em uma única List<EEventType>, e então realizar um único "GameEventHandler.callEvents(eventArgs)" para todos os eventos.
             if (KeyboardHelper.checkInput() == EEventType.QUIT_INPUT)
             {
                 GameEventArgs eventArgs = new GameEventArgs(new List<EEventType> { EEventType.QUIT_INPUT}, game);
