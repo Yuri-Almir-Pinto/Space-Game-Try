@@ -34,6 +34,8 @@ namespace Game_Try.Utils.Spriting
             this.scale = scale;
         }
 
+        // TODO: Adicionar atributo de vetores/retângulos para serem usados para desenhar os sprites, ao invés de criar novos toda a vez.
+
         public virtual void draw(SpriteBatch _spriteBatch, Texture2D texture)
         {
             _spriteBatch.Draw(texture,
