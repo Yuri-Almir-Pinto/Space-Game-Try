@@ -55,8 +55,6 @@ namespace Game_Try.Main
 
             });
 
-            // TODO: Add your update logic here
-
             base.Update(gameTime);
         }
 
@@ -68,7 +66,6 @@ namespace Game_Try.Main
             alien.draw(_spriteBatch, alienSprite);
             spaceship.draw(_spriteBatch, spaceshipSprite);
             _spriteBatch.End();
-            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
