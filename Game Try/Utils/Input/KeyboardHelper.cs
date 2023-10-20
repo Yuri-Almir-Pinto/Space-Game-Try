@@ -19,6 +19,7 @@ namespace Game_Try.Utils.Input
         public static Keys NONE;
 
         public static EEventType checkInput()
+            // TODO: Atualizar este método "checkInput" para retornar uma "List<EEventType>" ao invés de apenas um evento, permitindo o jogador realizar vários tipos distintos de input.
         {
             KeyboardState keyboard = Keyboard.GetState();
             if (keyboard.IsKeyDown(UP) || keyboard.IsKeyDown(DOWN) || keyboard.IsKeyDown(LEFT) || keyboard.IsKeyDown(RIGHT))
