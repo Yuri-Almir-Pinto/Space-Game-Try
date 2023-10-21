@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Game_Try.Entities.Enemies
 {
-    public class Alien : Sprite, IMoveable
+    public class Alien : Sprite
     {
         private float MoveSpeed;
 
@@ -23,7 +23,7 @@ namespace Game_Try.Entities.Enemies
             set { this.MoveSpeed = value; }
         }
 
-        public Alien(Vector2 position, float scale, float moveSpeed) : base(position, scale)
+        public Alien(Vector2 position, Texture2D texture, float scale, float moveSpeed) : base(position, texture, scale)
         {
             this.MoveSpeed = moveSpeed;
         }
@@ -31,12 +31,25 @@ namespace Game_Try.Entities.Enemies
         public void move(KeyboardState direction, float moveSpeedModifier = 1)
         {
             
-            this.Position.X += this.MoveSpeed;
+            
         }
 
-        public Texture2D load(ContentManager content)
+        public static Texture2D getAlienTexture(ContentManager content)
         {
-            return content.Load<Texture2D>("Enemies/Alien");
+            return content.Load<Texture2D>(ESprites.ALIEN_PATH);
+        }
+
+        public void drawAlien(SpriteBatch _spriteBatch)
+        {
+            _spriteBatch.Draw(this.texture,
+                            this.position,
+                            null,
+                            Color.White,
+                            0f,
+                            this.origin,
+                            this.scale,
+                            SpriteEffects.None,
+                            1f);
         }
     }
 }

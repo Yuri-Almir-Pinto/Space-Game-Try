@@ -2,11 +2,13 @@
 using Game_Try.Entities.Enemies;
 using Game_Try.Utils.Events;
 using Game_Try.Utils.Input;
+using Game_Try.Utils.Spriting;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Game_Try.Main
 {
@@ -14,11 +16,9 @@ namespace Game_Try.Main
     {
         private GraphicsDeviceManager _graphics;
         public static SpriteBatch _spriteBatch;
-        private static Spaceship spaceship = new Spaceship(new Vector2(100, 100), 0.1f, 8);
-        private Texture2D spaceshipSprite;
-        private static Alien alien = new Alien(new Vector2(100, 200), 0.05f, 2);
-        private Texture2D alienSprite;
-        private Texture2D background;
+        private static Spaceship spaceship;
+        private static Alien alien;
+        private static Sprite background;
 
         public SpaceInvadersGame()
         {
@@ -29,42 +29,39 @@ namespace Game_Try.Main
 
         protected override void Initialize()
         {
-            Spaceship.registerPlayerInputEvents(spaceship);
+            
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            alienSprite = alien.load(Content);
-            spaceshipSprite = spaceship.loadSpaceship(Content);
-            background = Content.Load<Texture2D>("Background/Space");
+            alien = new Alien(new Vector2(100, 50), Alien.getAlienTexture(Content), 0.05f, 8);
+            spaceship = new Spaceship(new Rectangle(100, 100, 50, 50), Spaceship.getSpaceshipTexture(Content), 8);
+            background = new Sprite(new Rectangle(0, 0, 800, 480),
+                                Content.Load<Texture2D>(ESprites.BACKGROUND_PATH));
+
+            Spaceship.registerPlayerInputEvents(spaceship);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (KeyboardHelper.checkInput() != EEventType.NO_INPUT)
-            {
+            if (!KeyboardHelper.checkInput().Contains(EEventType.NO_INPUT))
                 Spaceship.handlePlayerInput(this);
-            }
-            GameEventHandler.callEvents(new GameEventArgs(this)
-            {
-                eventType = new List<EEventType> { EEventType.MOVEMENT_INPUT },
-                keyboardState = new KeyboardState(new Keys[] { Keys.S }),
-                moveSpeedModifier = 0.5f
-
-            });
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
             _spriteBatch.Begin();
-            _spriteBatch.Draw(background, new Rectangle(0, 0, 800, 480), Color.White);
-            alien.draw(_spriteBatch, alienSprite);
-            spaceship.draw(_spriteBatch, spaceshipSprite);
+
+
+            background.DrawingMethod();
+            alien.DrawingMethod();
+            spaceship.DrawingMethod();
+
+
             _spriteBatch.End();
 
             base.Draw(gameTime);

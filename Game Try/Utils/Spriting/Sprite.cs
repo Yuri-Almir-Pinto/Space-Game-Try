@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Game_Try.Main;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -11,45 +12,70 @@ namespace Game_Try.Utils.Spriting
 {
     public class Sprite
     {
-
-        protected Vector2 Position;
-
-        protected float Scale;
-
+        protected SpriteBatch _spriteBatch = SpaceInvadersGame._spriteBatch;
+        private Vector2 Position;
+        private Vector2 Origin;
+        private Rectangle DestinationRectangle;
+        private float Scale;
+        private Texture2D Texture;
+        public delegate void DrawMethod();
+        public DrawMethod DrawingMethod;
+        public Rectangle destinationRectangle
+        {
+            get { return DestinationRectangle; }
+            set { DestinationRectangle = value; }
+        }
+        public Texture2D texture
+        {
+            get { return Texture; }
+            set { Texture = value; }
+        }
+        public Vector2 origin
+        {
+            get { return Origin; }
+            set { Origin = value; }
+        }
         public Vector2 position 
         {   
             get { return this.Position; } 
             set {  this.Position = value; }
         }
-
         public float scale
         {
             get { return this.Scale; }
             set { this.Scale = value; }
         }
-
-        public Sprite(Vector2 position, float scale)
+        public Sprite(Vector2 position, Texture2D texture, float scale)
         {
             this.position = position;
             this.scale = scale;
-        }
-
-        // TODO: Adicionar atributo de vetores/retângulos para serem usados para desenhar os sprites, ao invés de criar novos toda a vez.
-
-        public virtual void draw(SpriteBatch _spriteBatch, Texture2D texture)
-        {
-            _spriteBatch.Draw(texture,
-                            position,
+            this.texture = texture;
+            this.origin = new Vector2(texture.Width/2, texture.Height/2);
+            DrawingMethod += () =>
+            {
+                this._spriteBatch.Draw(this.texture,
+                            this.position,
                             null,
                             Color.White,
                             0f,
-                            new Vector2(texture.Width / 2, texture.Height / 2),
-                            scale,
+                            this.origin,
+                            this.scale,
                             SpriteEffects.None,
                             1f);
+            };
         }
 
-        public virtual Texture2D load(ContentManager content, string path)
+        public Sprite(Rectangle destinationRectangle, Texture2D texture)
+        {
+            this.position = new Vector2(destinationRectangle.X, destinationRectangle.Y);
+            this.destinationRectangle = destinationRectangle;
+            this.texture = texture;
+            DrawingMethod += () => _spriteBatch.Draw(this.texture,
+                                                    this.destinationRectangle,
+                                                    Color.White);
+        }
+
+        public static Texture2D getTexture(ContentManager content, string path)
         {
             return content.Load<Texture2D>(path);
         }

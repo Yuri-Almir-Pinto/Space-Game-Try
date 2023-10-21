@@ -16,6 +16,8 @@ namespace Game_Try.Entities
     public class Spaceship : Sprite, IMoveable
     {
         private float MoveSpeed;
+        public delegate void MoveType(KeyboardState direction, float moveSpeedModifier = 1);
+        public MoveType moveType;
 
         public float moveSpeed 
         {
@@ -23,56 +25,89 @@ namespace Game_Try.Entities
             set { this.MoveSpeed = value; }
         }
 
-        public Spaceship (Vector2 position, float scale, float moveSpeed) : base (position, scale)
+        public Spaceship (Vector2 position, Texture2D texture, float scale, float moveSpeed) : base (position, texture, scale)
         {
-            this.MoveSpeed= moveSpeed;
+            this.MoveSpeed = moveSpeed;
+            this.moveType += vectorMove;
         }
 
-        public void move(KeyboardState direction, float moveSpeedModifier = 1)
+        public Spaceship(Rectangle destinationRectangle, Texture2D texture, float moveSpeed) : base(destinationRectangle, texture)
         {
+            this.MoveSpeed = moveSpeed;
+            this.moveType += rectangleMove;
+        }
 
+        public void vectorMove(KeyboardState direction, float moveSpeedModifier = 1)
+        {
+            Vector2 movement = this.position;
             if (direction.IsKeyDown(KeyboardHelper.UP))
             {
-                this.Position.Y -= (MoveSpeed * moveSpeedModifier);
+                movement.Y -= (MoveSpeed * moveSpeedModifier);
             }
 
             if (direction.IsKeyDown(KeyboardHelper.DOWN))
             {
-                this.Position.Y += (MoveSpeed * moveSpeedModifier);
+                movement.Y += (MoveSpeed * moveSpeedModifier);
             }
 
             if (direction.IsKeyDown(KeyboardHelper.LEFT))
             {
-                this.Position.X -= (MoveSpeed * moveSpeedModifier);
+                movement.X -= (MoveSpeed * moveSpeedModifier);
             }
 
             if (direction.IsKeyDown(KeyboardHelper.RIGHT))
             {
-                this.Position.X += (MoveSpeed * moveSpeedModifier);
+                movement.X += (MoveSpeed * moveSpeedModifier);
             }
+            this.position = movement;
         }
 
-        public Texture2D loadSpaceship(ContentManager content)
+        public void rectangleMove(KeyboardState direction, float moveSpeedModifier = 1)
         {
-            return content.Load<Texture2D>("Character/Spaceship");
+            Rectangle movement = this.destinationRectangle;
+            if (direction.IsKeyDown(KeyboardHelper.UP))
+            {
+                movement.Y -= (int) (MoveSpeed * moveSpeedModifier);
+            }
+
+            if (direction.IsKeyDown(KeyboardHelper.DOWN))
+            {
+                movement.Y += (int) (MoveSpeed * moveSpeedModifier);
+            }
+
+            if (direction.IsKeyDown(KeyboardHelper.LEFT))
+            {
+                movement.X -= (int)(MoveSpeed * moveSpeedModifier);
+            }
+
+            if (direction.IsKeyDown(KeyboardHelper.RIGHT))
+            {
+                movement.X += (int) (MoveSpeed * moveSpeedModifier);
+            }
+            this.destinationRectangle = movement;
+        }
+
+        public static Texture2D getSpaceshipTexture(ContentManager content)
+        {
+            return content.Load<Texture2D>(ESprites.SPACESHIP_PATH);
         }
 
         public static void handlePlayerInput(SpaceInvadersGame game)
         {
-        // TODO: Atualizar para adicionar todos os EEventType em uma única List<EEventType>, e então realizar um único "GameEventHandler.callEvents(eventArgs)" para todos os eventos.
-            if (KeyboardHelper.checkInput() == EEventType.QUIT_INPUT)
+            List<EEventType> eEvents = new List<EEventType>();
+
+            if (KeyboardHelper.checkInput().Contains(EEventType.QUIT_INPUT))
+                eEvents.Add(EEventType.QUIT_INPUT);
+
+            if (KeyboardHelper.checkInput().Contains(EEventType.MOVEMENT_INPUT))
+                eEvents.Add(EEventType.MOVEMENT_INPUT);
+
+            GameEventArgs eventArgs = new GameEventArgs(game)
             {
-                GameEventArgs eventArgs = new GameEventArgs(new List<EEventType> { EEventType.QUIT_INPUT}, game);
+                eventType = eEvents
+            };
 
-                GameEventHandler.callEvents(eventArgs);
-            }
-
-            if (KeyboardHelper.checkInput() == EEventType.MOVEMENT_INPUT)
-            {
-                GameEventArgs eventArgs = new GameEventArgs(new List<EEventType> { EEventType.MOVEMENT_INPUT }, game);
-
-                GameEventHandler.callEvents(eventArgs);
-            }
+            GameEventHandler.callEvents(eventArgs);
         }
 
         public static void registerPlayerInputEvents(Spaceship spaceship)
@@ -81,7 +116,7 @@ namespace Game_Try.Entities
             {
                 if (eventArgs.eventType.Contains(EEventType.MOVEMENT_INPUT))
                 {
-                    spaceship.move(eventArgs.keyboardState, eventArgs.moveSpeedModifier);
+                    spaceship.moveType(eventArgs.keyboardState, eventArgs.moveSpeedModifier);
                 }
             };
 
@@ -93,9 +128,11 @@ namespace Game_Try.Entities
                 }
             };
 
-            List<EventHandler<GameEventArgs>> send = new();
-            send.Add(move);
-            send.Add(quit);
+            List<EventHandler<GameEventArgs>> send = new()
+            {
+                move,
+                quit
+            };
 
             GameEventHandler.registerEvents(send);
 

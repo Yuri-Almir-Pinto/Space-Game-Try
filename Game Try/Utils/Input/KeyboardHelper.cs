@@ -18,23 +18,32 @@ namespace Game_Try.Utils.Input
         public static Keys QUIT = Keys.Escape;
         public static Keys NONE;
 
-        public static EEventType checkInput()
-            // TODO: Atualizar este método "checkInput" para retornar uma "List<EEventType>" ao invés de apenas um evento, permitindo o jogador realizar vários tipos distintos de input.
+        public static IEnumerable<EEventType> checkInput()
         {
             KeyboardState keyboard = Keyboard.GetState();
+            List<EEventType> inputType = new();
+            bool hadInput = false;
+
             if (keyboard.IsKeyDown(UP) || keyboard.IsKeyDown(DOWN) || keyboard.IsKeyDown(LEFT) || keyboard.IsKeyDown(RIGHT))
             {
-                return EEventType.MOVEMENT_INPUT;
+                inputType.Add(EEventType.MOVEMENT_INPUT);
+                hadInput = true;
             }
             if (keyboard.IsKeyDown(FIRE))
             {
-                return EEventType.ATTACK_INPUT;
+                inputType.Add(EEventType.ATTACK_INPUT);
+                hadInput = true;
             }
             if (keyboard.IsKeyDown(QUIT))
             {
-                return EEventType.QUIT_INPUT;
+                inputType.Add(EEventType.QUIT_INPUT);
+                hadInput = true;
             }
-            return EEventType.NO_INPUT;
+            if (!hadInput) 
+            {
+                inputType.Add(EEventType.NO_INPUT);
+            }
+            return inputType;
         }
     }
 }

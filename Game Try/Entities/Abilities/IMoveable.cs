@@ -12,11 +12,10 @@ namespace Game_Try.Entities.Abilities
     public interface IMoveable
     {
         protected float moveSpeed { get; set; }
-
         public Vector2 position { get; set; }
+        public Rectangle destinationRectangle {  get; set; }
 
-        public float scale { get; set; }
-
-        public void move(KeyboardState Direction, float moveSpeedModifier);
+        public void vectorMove(KeyboardState Direction, float moveSpeedModifier);
+        public void rectangleMove(KeyboardState Direction, float moveSpeedModifier);
     }
 }
