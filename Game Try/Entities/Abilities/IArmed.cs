@@ -8,6 +8,6 @@ namespace Game_Try.Entities.Abilities
 {
     public interface IArmed
     {
-
+        // TODO: Fazer isso daqui por próximo. Quero dizer, eu preciso começar a avançar em algum momento, né.
     }
 }
