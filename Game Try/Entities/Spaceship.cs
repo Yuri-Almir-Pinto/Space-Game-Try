@@ -94,6 +94,7 @@ namespace Game_Try.Entities
 
         public static void handlePlayerInput(SpaceInvadersGame game)
         {
+        // TODO: Tirar isso daqui, e colocar todo e qualquer handling de input na classe de input de fato (Nesse caso, teclado).
             List<EEventType> eEvents = new List<EEventType>();
 
             if (KeyboardHelper.checkInput().Contains(EEventType.QUIT_INPUT))
