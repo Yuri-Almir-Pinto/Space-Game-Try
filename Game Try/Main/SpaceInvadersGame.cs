@@ -46,8 +46,15 @@ namespace Game_Try.Main
 
         protected override void Update(GameTime gameTime)
         {
-            if (!KeyboardHelper.checkInput().Contains(EEventType.NO_INPUT))
-                Spaceship.handlePlayerInput(this);
+            GameEventArgs args = KeyboardHandler.checkInput(new GameEventArgs(this));
+            if (args.eventType.Contains(EEventType.MOVEMENT_INPUT_RUN))
+            {
+                args.data["moveSpeedModifier"] = "2";
+                GameEventHandler.callEvents(args);
+            }
+            else
+                KeyboardHandler.runInput(this);
+            
 
             base.Update(gameTime);
         }
@@ -56,20 +63,13 @@ namespace Game_Try.Main
         {
             _spriteBatch.Begin();
 
-
             background.DrawingMethod();
             alien.DrawingMethod();
             spaceship.DrawingMethod();
 
-
             _spriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        public void ExitGame()
-        {
-            Exit();
         }
     }
 }

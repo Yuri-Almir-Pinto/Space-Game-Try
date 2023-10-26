@@ -16,7 +16,7 @@ namespace Game_Try.Entities
     public class Spaceship : Sprite, IMoveable
     {
         private float MoveSpeed;
-        public delegate void MoveType(KeyboardState direction, float moveSpeedModifier = 1);
+        public delegate void MoveType(GameEventArgs eventArgs);
         public MoveType moveType;
 
         public float moveSpeed 
@@ -37,53 +37,50 @@ namespace Game_Try.Entities
             this.moveType += rectangleMove;
         }
 
-        public void vectorMove(KeyboardState direction, float moveSpeedModifier = 1)
+        public void vectorMove(GameEventArgs args)
         {
             Vector2 movement = this.position;
-            if (direction.IsKeyDown(KeyboardHelper.UP))
-            {
-                movement.Y -= (MoveSpeed * moveSpeedModifier);
-            }
+            float speed;
+            if (args.data.Count > 0)
+                speed = MoveSpeed * float.Parse(args.data["moveSpeedModifier"]);
+            else
+                speed = MoveSpeed;
 
-            if (direction.IsKeyDown(KeyboardHelper.DOWN))
-            {
-                movement.Y += (MoveSpeed * moveSpeedModifier);
-            }
 
-            if (direction.IsKeyDown(KeyboardHelper.LEFT))
-            {
-                movement.X -= (MoveSpeed * moveSpeedModifier);
-            }
+            if (args.eventType.Contains(EEventType.MOVEMENT_INPUT_UP))
+                movement.Y -= speed;
+            if (args.eventType.Contains(EEventType.MOVEMENT_INPUT_DOWN))
+                movement.Y += speed;
+            if (args.eventType.Contains(EEventType.MOVEMENT_INPUT_LEFT))
+                movement.X -= speed;
+            if (args.eventType.Contains(EEventType.MOVEMENT_INPUT_RIGHT))
+                movement.X += speed;
 
-            if (direction.IsKeyDown(KeyboardHelper.RIGHT))
-            {
-                movement.X += (MoveSpeed * moveSpeedModifier);
-            }
             this.position = movement;
         }
 
-        public void rectangleMove(KeyboardState direction, float moveSpeedModifier = 1)
+        public void rectangleMove(GameEventArgs args)
         {
             Rectangle movement = this.destinationRectangle;
-            if (direction.IsKeyDown(KeyboardHelper.UP))
+            int speed;
+            if (args.data.ContainsKey("moveSpeedModifier"))
             {
-                movement.Y -= (int) (MoveSpeed * moveSpeedModifier);
+                float teste = float.Parse(args.data["moveSpeedModifier"]);
+                speed = (int)(MoveSpeed*teste);
             }
+                
+            else
+                speed = (int) MoveSpeed;
 
-            if (direction.IsKeyDown(KeyboardHelper.DOWN))
-            {
-                movement.Y += (int) (MoveSpeed * moveSpeedModifier);
-            }
+            if (args.eventType.Contains(EEventType.MOVEMENT_INPUT_UP))
+                movement.Y -= speed;
+            if (args.eventType.Contains(EEventType.MOVEMENT_INPUT_DOWN))
+                movement.Y += speed;
+            if (args.eventType.Contains(EEventType.MOVEMENT_INPUT_LEFT))
+                movement.X -= speed;
+            if (args.eventType.Contains(EEventType.MOVEMENT_INPUT_RIGHT))
+                movement.X += speed;
 
-            if (direction.IsKeyDown(KeyboardHelper.LEFT))
-            {
-                movement.X -= (int)(MoveSpeed * moveSpeedModifier);
-            }
-
-            if (direction.IsKeyDown(KeyboardHelper.RIGHT))
-            {
-                movement.X += (int) (MoveSpeed * moveSpeedModifier);
-            }
             this.destinationRectangle = movement;
         }
 
@@ -92,32 +89,13 @@ namespace Game_Try.Entities
             return content.Load<Texture2D>(ESprites.SPACESHIP_PATH);
         }
 
-        public static void handlePlayerInput(SpaceInvadersGame game)
-        {
-        // TODO: Tirar isso daqui, e colocar todo e qualquer handling de input na classe de input de fato (Nesse caso, teclado).
-            List<EEventType> eEvents = new List<EEventType>();
-
-            if (KeyboardHelper.checkInput().Contains(EEventType.QUIT_INPUT))
-                eEvents.Add(EEventType.QUIT_INPUT);
-
-            if (KeyboardHelper.checkInput().Contains(EEventType.MOVEMENT_INPUT))
-                eEvents.Add(EEventType.MOVEMENT_INPUT);
-
-            GameEventArgs eventArgs = new GameEventArgs(game)
-            {
-                eventType = eEvents
-            };
-
-            GameEventHandler.callEvents(eventArgs);
-        }
-
         public static void registerPlayerInputEvents(Spaceship spaceship)
         {
             EventHandler<GameEventArgs> move = (sender, eventArgs) =>
             {
                 if (eventArgs.eventType.Contains(EEventType.MOVEMENT_INPUT))
                 {
-                    spaceship.moveType(eventArgs.keyboardState, eventArgs.moveSpeedModifier);
+                    spaceship.moveType(eventArgs);
                 }
             };
 
@@ -129,13 +107,11 @@ namespace Game_Try.Entities
                 }
             };
 
-            List<EventHandler<GameEventArgs>> send = new()
-            {
-                move,
-                quit
-            };
-
-            GameEventHandler.registerEvents(send);
+            GameEventHandler.registerEvents(
+                new List<EventHandler<GameEventArgs>>
+                {
+                    move, quit
+                });
 
         }
     }

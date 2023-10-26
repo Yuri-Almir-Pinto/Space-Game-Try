@@ -13,7 +13,7 @@ namespace Game_Try.Utils.Events
         public List<EEventType> eventType { get; set; } = new();
         public KeyboardState keyboardState { get; set; }
         public SpaceInvadersGame game { get; set; }
-        public float moveSpeedModifier { get; set; }
+        public Dictionary<string, string> data { get; set; } = new();
 
         public GameEventArgs(List<EEventType> eventType, SpaceInvadersGame game)
         {
@@ -23,7 +23,6 @@ namespace Game_Try.Utils.Events
             }
             this.game = game;
             this.keyboardState = Keyboard.GetState();
-            this.moveSpeedModifier = 1;
         }
 
         public GameEventArgs(SpaceInvadersGame game)
@@ -31,7 +30,11 @@ namespace Game_Try.Utils.Events
             this.eventType.Add(EEventType.NO_INPUT);
             this.game = game;
             this.keyboardState = Keyboard.GetState();
-            this.moveSpeedModifier = 1;
+        }
+
+        public GameEventArgs()
+        {
+            throw new Exception("Utilize algum construtor com argumentos. Se incerto, passe 'SpaceInvadersGame' como argumento.");
         }
     }
 }
