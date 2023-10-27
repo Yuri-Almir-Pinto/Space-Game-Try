@@ -17,10 +17,12 @@ namespace Game_Try.Utils.Events
 
         public GameEventArgs(List<EEventType> eventType, SpaceInvadersGame game)
         {
-            foreach(EEventType type in eventType)
-            {
-                this.eventType.Add(type);
-            }
+            this.eventType = eventType;
+            //foreach(EEventType type in eventType)
+            //{
+            //    this.eventType.Add(type);
+            //}
+            // Code of shame
             this.game = game;
             this.keyboardState = Keyboard.GetState();
         }
